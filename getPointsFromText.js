@@ -3,7 +3,7 @@ const svgpath = require('svgpath');
 const svgPathProperties = require("svg-path-properties");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
-const fs = require('fs')
+const fs = require('fs');
 
 
 function getPointsfromText(font, text, stepper) {
@@ -82,10 +82,14 @@ function getPoints(paths, stepPoint){
     const properties = new svgPathProperties.svgPathProperties(path.d);
 
     // get points at regular intervals
-    for (var c = 0; c < properties.getTotalLength(); c += stepPoint) {
+    total_length = properties.getTotalLength()
+    for (var c = 0; c < total_length; c += stepPoint) {
         var point = properties.getPointAtLength(c);
-        data_points.push([point.x, point.y])
+        data_points.push([+point.x.toFixed(2), +point.y.toFixed(2)])
     }
+    // always get last point
+    var point = properties.getPointAtLength(total_length);
+    data_points.push([+point.x.toFixed(2), +point.y.toFixed(2)])
   })
   return data_points
 }

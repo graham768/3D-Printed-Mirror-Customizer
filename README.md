@@ -1,5 +1,9 @@
 # Words to Path
 
+- Run `npm start` and then `curl -d "font=EMSOsmotron&text=Hello" -X POST http://localhost:3000` to get a list of points that say Hello
+- These points can be fed into the mirror-array project as they are printed here (array of 2 element arrays)
+
+# Process
 ## Fonts
 
 - The first step is getting a single line svg font - http://cutlings.wasbo.net/single-line-fonts-options/
@@ -23,12 +27,6 @@
   - manually run script with array and check the outputs are correct
  
 
-
-
-## Future Ideas
-
-- Find a couple more fonts for options
-- Save all font svgs locally instead of downloading them each time - this was a remnent of the browser based design
 
 ## Test scripts
 

@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
-const getPointsfromText = require("./createSvg")
+const getPointsfromText = require("./getPointsFromText")
 
 const font = {
   alignment: 'left',

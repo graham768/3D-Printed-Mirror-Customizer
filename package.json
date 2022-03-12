@@ -1,0 +1,19 @@
+{
+  "name": "words-to-paths",
+  "version": "1.0.0",
+  "description": "- The first step is getting a single line svg font - http://cutlings.wasbo.net/single-line-fonts-options/\r - Font file formats require closed paths to make outlines so even if they say they're single line, they actually double back very thinly\r - I downloaded the Geometric svg font from above",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3",
+    "jsdom": "^19.0.0",
+    "svg-path-properties": "^1.0.11",
+    "svgpath": "^2.5.0"
+  }
+}

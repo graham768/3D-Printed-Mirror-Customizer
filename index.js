@@ -6,13 +6,8 @@ const getPointsfromText = require("./getPointsFromText")
 const font = {
   alignment: 'left',
   selected: 'EMSOsmotron',
-  sizeInPixels: 75,
   size: 75,
   lineHeight: 1,
-  color: false,
-  loading: false,
-  strokeWidth: 1,
-  widthUnit: 'px',
   characterSpacing: 2
 }
 
@@ -22,15 +17,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.post('/', function (req, res) {
   fontName = req.body.font
   text = req.body.text
+  hexNumber = req.body.hex
 
   font.selected = fontName
-  // paths = createTextPaths(font, text)
-  // paths.forEach((path) =>{
-  //   console.log(path["d"])
-  // })
-  // res.send(paths)
-  points = getPointsfromText(font, text, 10)
+  points = getPointsfromText(font, text, hexNumber)
   res.send(points)
+  // res.send(`Points: ${points}\nLength: ${points.length}`)
 })
 
 port = 3000

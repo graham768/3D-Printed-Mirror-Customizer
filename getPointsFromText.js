@@ -6,9 +6,9 @@ const { JSDOM } = jsdom;
 const fs = require('fs');
 
 
-function getPointsfromText(font, text, stepper) {
+function getPointsfromText(font, text, hexNumber) {
   paths = createTextPaths(font, text)
-  points = getPoints(paths, stepper)
+  points = getPoints(paths, hexNumber)
   return points
 }
 
@@ -56,9 +56,7 @@ function createTextPaths(font, text) {
         paths.push({
           d: new svgpath(fontData[character].d)
                   .translate(characterXPosition, originY)
-                  //.skew()
                   .rel()
-                  //.round(2)
                   .toString()
         })
       }
@@ -76,18 +74,37 @@ function loadFont(fontName, size) {
 }
 
 
-function getPoints(paths, stepPoint){
+// Could also leave it to user to request - drop down list with calls to the endpoint updating the graphic on the spot
+// const hexNumbers = [1, 7, 19, 37, 61, 91, 127, 169, 217, 271, 331, 397, 469, 547, 631, 721, 817, 919]
+
+function getPoints(paths, hexNumber){
   var data_points = [];
+  all_path_total_length = 0
+  paths.forEach(path => {
+    const properties = new svgPathProperties.svgPathProperties(path.d);
+    all_path_total_length += properties.getTotalLength()
+  })
+  
+  // always add first and last for each path, so reduce stepPoint by paths.length*2
+  stepPoint = all_path_total_length / (hexNumber - paths.length*2)
+  let remainder = 0
   paths.forEach(path => {
     const properties = new svgPathProperties.svgPathProperties(path.d);
 
-    // get points at regular intervals
+    // Always record first point
+    var point = properties.getPointAtLength(0);
+    data_points.push([+point.x.toFixed(2), +point.y.toFixed(2)])
+
+    // get points at regular intervals with remainder from last path
     total_length = properties.getTotalLength()
-    for (var c = 0; c < total_length; c += stepPoint) {
+    var c;
+    for (c = remainder; c < total_length; c += stepPoint) {
         var point = properties.getPointAtLength(c);
         data_points.push([+point.x.toFixed(2), +point.y.toFixed(2)])
     }
-    // always get last point
+    remainder = c - total_length
+
+    // Always record last point
     var point = properties.getPointAtLength(total_length);
     data_points.push([+point.x.toFixed(2), +point.y.toFixed(2)])
   })

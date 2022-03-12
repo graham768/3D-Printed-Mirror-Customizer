@@ -1,6 +1,6 @@
 # Words to Path
 
-- Run `npm start` and then `curl -d "font=EMSOsmotron&text=Hello" -X POST http://localhost:3000` to get a list of points that say Hello
+- Run `npm start` and then `curl -d "font=EMSOsmotron&text=Hello&hex=37" -X POST http://localhost:3000` to get a list of points that say Hello
 - These points can be fed into the mirror-array project as they are printed here (array of 2 element arrays)
 
 # Process
@@ -33,9 +33,7 @@
 `EMSOsmotron` is a good font for this
 
 ```
-curl -d '{"text": "mytext"}' -H 'Content-Type: application/json' http://localhost:3000
-
-curl -d "font=EMSOsmotron&text=Hello" -X POST http://localhost:3000
+curl -d "font=EMSOsmotron&text=Hello&hex=91" -X POST http://localhost:3000
 
 ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789
 ```

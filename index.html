@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Draggable Points</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <form id="mirror_params" method="post">
+    <div>
+      <label for="text">Mirror Text:</label>
+      <input name="text" id="text" value="Hello" />
+    </div>
+    <div>
+      <label for="font">Font</label>
+      <select id="font" name="font">
+        <option value="HersheySans1">HersheySans1</option>
+        <option value="HersheySansMed">HersheySansMed</option>
+        <option value="HersheyScript1">HersheyScript1</option>
+        <option value="HersheyScriptMed">HersheyScriptMed</option>
+        <option value="HersheySerifBold">HersheySerifBold</option>
+        <option value="HersheySerifBoldItalic">HersheySerifBoldItalic</option>
+        <option value="HersheySerifMed">HersheySerifMed</option>
+        <option value="HersheySerifMedItalic">HersheySerifMedItalic</option>
+        <option value="CutlingsGeometric">CutlingsGeometric</option>
+        <option value="EMSAllure">EMSAllure</option>
+        <option value="EMSBird">EMSBird</option>
+        <option value="EMSBirdSwashCaps">EMSBirdSwashCaps</option>
+        <option value="EMSBrush">EMSBrush</option>
+        <option value="EMSCapitol">EMSCapitol</option>
+        <option value="EMSCasualHand">EMSCasualHand</option>
+        <option value="EMSDecorousScript">EMSDecorousScript</option>
+        <option value="EMSDelight">EMSDelight</option>
+        <option value="EMSDelightSwashCaps">EMSDelightSwashCaps</option>
+        <option value="EMSElfin">EMSElfin</option>
+        <option value="EMSFelix">EMSFelix</option>
+        <option value="EMSHerculean">EMSHerculean</option>
+        <option value="EMSInvite">EMSInvite</option>
+        <option value="EMSLeague">EMSLeague</option>
+        <option value="EMSLittlePrincess">EMSLittlePrincess</option>
+        <option value="EMSMistyNight">EMSMistyNight</option>
+        <option value="EMSNeato">EMSNeato</option>
+        <option value="EMSNixish">EMSNixish</option>
+        <option value="EMSNixishItalic">EMSNixishItalic</option>
+        <option value="EMSOsmotron">EMSOsmotron</option>
+        <option value="EMSPancakes">EMSPancakes</option>
+        <option value="EMSPepita">EMSPepita</option>
+        <option value="EMSQwandry">EMSQwandry</option>
+        <option selected value="EMSReadability">EMSReadability</option>
+        <option value="EMSReadabilityItalic">EMSReadabilityItalic</option>
+        <option value="EMSSociety">EMSSociety</option>
+        <option value="EMSSpaceRocks">EMSSpaceRocks</option>
+        <option value="EMSSwiss">EMSSwiss</option>
+        <option value="EMSTech">EMSTech</option>
+        <option value="HersheyGothEnglish">HersheyGothEnglish</option>
+        <option value="HersheyGothGerman">HersheyGothGerman</option>
+        <option value="HersheyGothItalian">HersheyGothItalian</option>
+      </select>
+    </div>
+    <div>
+      <label for="hex">Number of Mirrors</label>
+      <select id="hex" name="hex">
+        <option value="37">37</option>
+        <option value="61">61</option>
+        <option value="91">91</option>
+        <option selected value="127">127</option>
+        <option value="169">169</option>
+      </select>
+    </div>
+    <div>
+      <button>Submit</button>
+    </div>
+  </form>
+  <canvas id="canvas" width="1000" height="1000"></canvas>
+
+  <script>
+    // Define an array of points
+    let points = []
+
+    document.forms['mirror_params'].addEventListener('submit', (event) => {
+        event.preventDefault();
+        // TODO do something here to show user that form is being submitted
+        fetch(event.target.action, {
+            method: 'POST',
+            body: new URLSearchParams(new FormData(event.target)) // event.target is the form
+        }).then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json(); // or response.text() or whatever the server sends
+        }).then((body) => {
+            points = []
+            body.forEach(point => {
+              points.push({x:point[0], y:point[1]})
+            });
+            drawPoints()
+        }).catch((error) => {
+            console.log(error)
+        });
+    });
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.scale(2, 2)
+
+
+    // Draw the initial points on the canvas
+    function drawPoints() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'blue';
+      for (let i = 0; i < points.length; i++) {
+        ctx.beginPath();
+        ctx.arc(points[i].x, points[i].y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    
+    drawPoints();
+
+    // Define a function to check if the mouse is hovering over a point
+    function isMouseOverPoint(x, y, point) {
+      const distance = Math.sqrt((x - point.x) ** 2 + (y - point.y) ** 2);
+      return distance <= 5;
+    }
+
+    // Define a variable to keep track of which point is being dragged
+    let selectedPoint = null;
+
+    // Add an event listener to the canvas to detect when the mouse is pressed down
+    canvas.addEventListener('mousedown', (event) => {
+      const x = event.offsetX;
+      const y = event.offsetY;
+
+      // Check if the mouse is hovering over any of the points
+      for (let i = 0; i < points.length; i++) {
+        if (isMouseOverPoint(x, y, points[i])) {
+          selectedPoint = points[i];
+          break;
+        }
+      }
+    });
+
+    // Add an event listener to the canvas to detect when the mouse is released
+    canvas.addEventListener('mouseup', (event) => {
+      selectedPoint = null;
+    });
+
+    // Add an event listener to the canvas to detect when the mouse is moved
+    canvas.addEventListener('mousemove', (event) => {
+      if (selectedPoint) {
+        selectedPoint.x = event.offsetX;
+        selectedPoint.y = event.offsetY;
+        drawPoints();
+      }
+    });
+  </script>
+</body>
+</html>

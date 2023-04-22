@@ -1,13 +1,14 @@
 # Words to Path
 
-- Run `npm start` and then `curl -d "font=EMSOsmotron&text=Hello&hex=37" -X POST http://localhost:3000` to get a list of points that say Hello
+- Run `npm start` and then `curl -d "font=EMSOsmotron&text=Hello&hex=37" -X POST http://localhost:8000` to get a list of points that say Hello
 - These points can be fed into the mirror-array project as they are printed here (array of 2 element arrays)
+- Go to `http://localhost:8000` for interfacing
 
 # Process
 ## Fonts
 
 - The first step is getting a single line svg font - http://cutlings.wasbo.net/single-line-fonts-options/
-- Font file formats require closed paths to make outlines so even if they say they're single line, they actually double back very thinly
+- Font file formats require closed paths to make outlines so even if  they say they're single line, they actually double back very thinly
 - I downloaded the Geometric svg font from above
 
 ## Getting the shape manually
@@ -33,7 +34,11 @@
 `EMSOsmotron` is a good font for this
 
 ```
-curl -d "font=EMSOsmotron&text=Hello&hex=91" -X POST http://localhost:3000
+curl -d "font=EMSOsmotron&text=Hello&hex=91" -X POST http://localhost:8000
 
 ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789
 ```
+
+
+# Used this one
+curl -d "font=EMSReadability&text=GRAHAM&hex=127" -X POST http://localhost:8000

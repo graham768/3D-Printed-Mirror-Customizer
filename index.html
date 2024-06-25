@@ -75,7 +75,7 @@
       <button>Submit</button>
     </div>
   </form>
-  <canvas id="canvas" width="1000" height="1000"></canvas>
+  <canvas id="canvas" width="500" height="500"></canvas>
 
   <script>
     // Define an array of points
@@ -93,7 +93,7 @@
             }
             return response.json(); // or response.text() or whatever the server sends
         }).then((body) => {
-            points = []
+            points.length = 0
             body.forEach(point => {
               points.push({x:point[0], y:point[1]})
             });
@@ -105,7 +105,15 @@
 
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    ctx.scale(2, 2)
+    let scaling = 2
+    ctx.scale(scaling, scaling)
+
+    function convertMouseCoords(event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = (event.clientX - rect.left) * scaling;
+      const y = (event.clientY - rect.top) * scaling;
+      return { x, y };
+    }
 
 
     // Draw the initial points on the canvas
@@ -132,15 +140,18 @@
 
     // Add an event listener to the canvas to detect when the mouse is pressed down
     canvas.addEventListener('mousedown', (event) => {
-      const x = event.offsetX;
-      const y = event.offsetY;
+      // const x = event.offsetX;
+      // const y = event.offsetY;
+      const { x, y } = convertMouseCoords(event);
 
       // Check if the mouse is hovering over any of the points
       for (let i = 0; i < points.length; i++) {
         if (isMouseOverPoint(x, y, points[i])) {
+          console.log("yes!")
           selectedPoint = points[i];
           break;
         }
+        console.log("no :(")
       }
     });
 
